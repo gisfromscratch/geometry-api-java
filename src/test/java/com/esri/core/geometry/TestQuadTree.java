@@ -3,6 +3,8 @@ package com.esri.core.geometry;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.util.Random;
+
 public class TestQuadTree extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
@@ -13,6 +15,28 @@ public class TestQuadTree extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
+
+    @Test
+    public void testQuadTreeConstructionAtRandom() {
+        Random random = new Random();
+        Envelope2D wgs84XYDomain = new Envelope2D(-180, -90, 180, 90);
+
+        final int TreeHeight = 8;
+        QuadTree quadTree = new QuadTree(wgs84XYDomain, TreeHeight);
+
+        final int NumberOfRegions = (int) 100e6;
+        Envelope extent = new Envelope();
+        for (int regionIndex = 0; regionIndex < NumberOfRegions; regionIndex++) {
+            double x = (random.nextDouble() - 0.5) * wgs84XYDomain.getWidth();
+            double y = (random.nextDouble() - 0.5) * wgs84XYDomain.getHeight();
+            Point location = new Point(x, y);
+            location.queryEnvelope(extent);
+            quadTree.insert(regionIndex, new Envelope2D(extent.getXMin(), extent.getYMin(), extent.getXMax(), extent.getYMax()));
+        }
+
+        System.out.print(NumberOfRegions + " regions created. ");
+        System.out.println(Runtime.getRuntime().totalMemory() / 1024 / 1024 + " MB allocated.");
+    }
 
 	@Test
 	public static void test1() {
