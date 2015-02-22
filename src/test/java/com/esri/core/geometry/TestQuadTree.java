@@ -1,5 +1,6 @@
 package com.esri.core.geometry;
 
+import edu.gis.core.geometry.SimpleQuadTree;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -22,7 +23,8 @@ public class TestQuadTree extends TestCase {
         Envelope2D wgs84XYDomain = new Envelope2D(-180, -90, 180, 90);
 
         final int TreeHeight = 8;
-        QuadTree quadTree = new QuadTree(wgs84XYDomain, TreeHeight);
+        //QuadTree quadTree = new QuadTree(wgs84XYDomain, TreeHeight);
+        SimpleQuadTree simpleQuadTree = new SimpleQuadTree(new Envelope(-180, -90, 180, 90), TreeHeight);
 
         final int ChunkRegionSize = (int) 1e5;
         final int NumberOfRegions = (int) 100e6;
@@ -31,8 +33,9 @@ public class TestQuadTree extends TestCase {
             double x = (random.nextDouble() - 0.5) * wgs84XYDomain.getWidth();
             double y = (random.nextDouble() - 0.5) * wgs84XYDomain.getHeight();
             Point location = new Point(x, y);
-            location.queryEnvelope(extent);
-            quadTree.insert(regionIndex, new Envelope2D(extent.getXMin(), extent.getYMin(), extent.getXMax(), extent.getYMax()));
+            //location.queryEnvelope(extent);
+            //quadTree.insert(regionIndex, new Envelope2D(extent.getXMin(), extent.getYMin(), extent.getXMax(), extent.getYMax()));
+            simpleQuadTree.insert(regionIndex, location);
             if (0 == (regionIndex + 1) % ChunkRegionSize) {
                 System.out.print(regionIndex + 1 + " regions created . . . ");
                 System.out.println(Runtime.getRuntime().totalMemory() / 1024 / 1024 + " MB allocated.");
