@@ -3,6 +3,8 @@ package edu.gis.core.geometry;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
 
+import java.util.Collections;
+
 /**
  * Simple implementation of a quad tree structure.
  */
@@ -40,6 +42,17 @@ public class SimpleQuadTree implements SpatialIndex {
         }
         addEntry(id);
         return true;
+    }
+
+    @Override
+    public Iterable<Integer> intersect(Geometry geometry) {
+        geometry.queryEnvelope(sharedExtent);
+        if (!xyDomain.isIntersecting(sharedExtent)) {
+            return Collections.emptyList();
+        }
+
+        // TODO: Query this ids and all subdivision ids
+        return Collections.emptyList();
     }
 
     private boolean insert(int id, Envelope extent) {

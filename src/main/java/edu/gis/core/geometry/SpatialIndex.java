@@ -14,4 +14,11 @@ public interface SpatialIndex {
      * @return true when the entry could be inserted.
      */
     boolean insert(int id, Geometry geometry);
+
+    /**
+     * Intersects the entries of this index with the specified geometry.
+     * @param geometry The geometry which should be part of the intersection.
+     * @return A list of ids which have an intersection with the specified geometry.
+     */
+    Iterable<Integer> intersect(Geometry geometry);
 }
