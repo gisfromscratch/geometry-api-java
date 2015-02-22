@@ -2,6 +2,8 @@ package edu.gis.core.geometry;
 
 import com.esri.core.geometry.Geometry;
 
+import java.util.Iterator;
+
 /**
  * Interface for spatial index implementations.
  */
@@ -20,5 +22,5 @@ public interface SpatialIndex {
      * @param geometry The geometry which should be part of the intersection.
      * @return A list of ids which have an intersection with the specified geometry.
      */
-    Iterable<Integer> intersect(Geometry geometry);
+    Iterator<Integer> intersect(Geometry geometry);
 }

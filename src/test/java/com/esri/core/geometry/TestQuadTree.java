@@ -1,9 +1,13 @@
 package com.esri.core.geometry;
 
 import edu.gis.core.geometry.SimpleQuadTree;
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
 public class TestQuadTree extends TestCase {
@@ -44,6 +48,34 @@ public class TestQuadTree extends TestCase {
 
         System.out.print(NumberOfRegions + " regions created. ");
         System.out.println(Runtime.getRuntime().totalMemory() / 1024 / 1024 + " MB allocated.");
+    }
+
+    @Test
+    public void testQuadTreeIntersection() {
+        final int TreeHeight = 8;
+        Envelope xyDomain = new Envelope(-180, -90, 180, 90);
+        SimpleQuadTree simpleQuadTree = new SimpleQuadTree(xyDomain, TreeHeight);
+
+        Point lowerLeft = new Point(xyDomain.getXMin(), xyDomain.getYMin());
+        Point lowerRight = new Point(xyDomain.getXMax(), xyDomain.getYMin());
+        Point upperLeft = new Point(xyDomain.getXMin(), xyDomain.getYMax());
+        Point upperRight = new Point(xyDomain.getYMax(), xyDomain.getYMax());
+        Point center = xyDomain.getCenter();
+        simpleQuadTree.insert(0, lowerLeft);
+        simpleQuadTree.insert(1, lowerRight);
+        simpleQuadTree.insert(2, upperLeft);
+        simpleQuadTree.insert(3, upperRight);
+        simpleQuadTree.insert(4, center);
+
+        Iterator<Integer> intersection = simpleQuadTree.intersect(xyDomain);
+        assertTrue("The intersection must not be empty!", intersection.hasNext());
+
+        HashSet<Integer> ids = new HashSet<Integer>();
+        while (intersection.hasNext()) {
+            Integer id = intersection.next();
+            ids.add(id);
+        }
+        assertTrue("Wrong number of intersections!", 5 == ids.size());
     }
 
 	@Test
