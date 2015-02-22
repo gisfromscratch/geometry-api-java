@@ -24,6 +24,7 @@ public class TestQuadTree extends TestCase {
         final int TreeHeight = 8;
         QuadTree quadTree = new QuadTree(wgs84XYDomain, TreeHeight);
 
+        final int ChunkRegionSize = (int) 1e5;
         final int NumberOfRegions = (int) 100e6;
         Envelope extent = new Envelope();
         for (int regionIndex = 0; regionIndex < NumberOfRegions; regionIndex++) {
@@ -32,6 +33,10 @@ public class TestQuadTree extends TestCase {
             Point location = new Point(x, y);
             location.queryEnvelope(extent);
             quadTree.insert(regionIndex, new Envelope2D(extent.getXMin(), extent.getYMin(), extent.getXMax(), extent.getYMax()));
+            if (0 == (regionIndex + 1) % ChunkRegionSize) {
+                System.out.print(regionIndex + 1 + " regions created . . . ");
+                System.out.println(Runtime.getRuntime().totalMemory() / 1024 / 1024 + " MB allocated.");
+            }
         }
 
         System.out.print(NumberOfRegions + " regions created. ");
